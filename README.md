@@ -1,6 +1,90 @@
 # Dynamometer
 
-TODO: Write a gem description
+Adds dynamic attributes to ActiveRecord models
+
+## Usage
+
+Generate a migration to enable hstore
+
+    class EnableHstore < ActiveRecord::Migration
+      def up
+        enable_extension "hstore"
+      end
+    
+      def down
+        disable_extension "hstore"
+      end
+    end
+    
+Add a dynamic_attributes hstore when creating a table
+
+    create_table :users do |t|
+      t.hstore :dynamic_attributes
+      t.index :dynamic_attributes
+    end
+    
+or add dynamic_attributes to an existing table
+
+    add_column :users, :dynamic_attributes, :hstore
+    add_index :users, :dynamic_attributes
+
+Add dynamic attributes to your ActiveRecord model
+
+    class User < ActiveRecord::Base
+      include DynamicAttributes
+    end
+
+## Accessors
+
+You can read dynamic attributes like you would typical attributes.
+
+    user.category
+    user[:category]
+    user['category']
+
+You can write dynamic attributes like you would typical attributes, as well.
+
+    user.category = 'superuser'
+    user[:category] = 'superuser'
+    user['category'] = 'superuser'
+    user.update_attribute(:category, 'superuser')
+    user.update_attributes(category: 'superuser')
+
+Dynamic attributes will appear in your model's attributes `user.attributes` as if they were typical database attributes.
+
+You can access just the dynamic attributes by calling `dynamic_attributes`.
+
+## Querying
+
+You can query for matches to dynamic_attributes by calling `where_dynamic_attributes`. 
+
+    current_site.users.where_dynamic_attributes(category: 'superuser')
+    current_site.users.where_dynamic_attributes(category: 'superuser', name: 'Steve')
+
+I can't figure out how to do this correctly in the gem. So, for now to use `where_dynamic_attributes`, put this in your `config/initializers`:
+
+    module ActiveRecord
+      module QueryMethods
+        extend ActiveSupport::Concern
+    
+        def where_dynamic_attributes(filters)
+          (filters || {}).each do |k, v|
+            self.where_values += build_where("dynamic_attributes @> hstore(?, ?)", [k, v])
+          end
+          self
+        end
+    
+      end
+    end
+
+## ActiveModel Serializers
+
+If you want to serialize all of your dynamic attributes using activemodel serializers
+
+    class UserSerializer < ActiveModel::Serializer
+      include DynamicAttributesSerializer
+      attributes :id
+    end
 
 ## Installation
 
@@ -11,19 +95,3 @@ Add this line to your application's Gemfile:
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install dynamometer
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
