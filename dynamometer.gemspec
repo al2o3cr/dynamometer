@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'dynamic/attributes/version'
+require 'dynamometer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "dynamic-attributes"
-  spec.version       = Dynamic::Attributes::VERSION
+  spec.name          = "dynamometer"
+  spec.version       = Dynamometer::VERSION
   spec.authors       = ["John Colvin"]
   spec.email         = ["john.colvin@neo.com"]
   spec.description   = "Adds support for searchable, sortable, dynamic ActiveRecord attributes"

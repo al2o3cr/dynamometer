@@ -1,4 +1,4 @@
-# Dynamic::Attributes
+# Dynamometer
 
 TODO: Write a gem description
 
@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'dynamic-attributes'
+    gem 'dynamometer'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install dynamic-attributes
+    $ gem install dynamometer
 
 ## Usage
 
