@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Dynamic::Attributes::VERSION
   spec.authors       = ["John Colvin"]
   spec.email         = ["john.colvin@neo.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = "Adds support for searchable, sortable, dynamic ActiveRecord attributes"
+  spec.summary       = "Makes dynamic attributes in an hstore column appear as top level attribute."
   spec.homepage      = ""
   spec.license       = "MIT"
 
