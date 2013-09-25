@@ -2,12 +2,11 @@ module DynamicAttributes
 
   extend ActiveSupport::Concern
 
-  def [](name)
-    attribute_name = name.to_s
-    if has_attribute?(attribute_name)
+  def [](attr_name)
+    if has_attribute?(attr_name.to_s)
       super
-    elsif has_dynamic_attribute?(attribute_name)
-      read_dynamic_attribute(attribute_name)
+    elsif has_dynamic_attribute?(attr_name)
+      read_dynamic_attribute(attr_name)
     else
       super
     end
@@ -21,12 +20,11 @@ module DynamicAttributes
     end
   end
 
-  def method_missing(name, *args)
-    method_name = name.to_s
-    if method_name =~ /^[\w]+\=$/
-      write_dynamic_attribute(method_name.chop, args[0])
-    elsif has_dynamic_attribute?(method_name)
-      read_dynamic_attribute(method_name)
+  def method_missing(method, *args)
+    if has_dynamic_attribute?(method)
+      read_dynamic_attribute(method)
+    elsif method =~ /^[\w]+\=$/
+      write_dynamic_attribute(method.to_s.chop, args[0])
     else
       super
     end
@@ -34,26 +32,26 @@ module DynamicAttributes
 
   def attributes
     attrs = super
-    props = attrs.delete('dynamic_attributes') || {}
-    attrs.merge(props)
+    dynamic_attrs = attrs.delete('dynamic_attributes') || {}
+    attrs.merge(dynamic_attrs)
   end
 
   def dynamic_attributes
-    self[:dynamic_attributes] || {}
+    self['dynamic_attributes'] || {}
   end
 
   private
 
-  def has_dynamic_attribute?(name)
-    dynamic_attributes.has_key?(name.to_s)
+  def has_dynamic_attribute?(attr_name)
+    dynamic_attributes.has_key?(attr_name.to_s)
   end
 
-  def read_dynamic_attribute(name)
-    dynamic_attributes[name]
+  def read_dynamic_attribute(attr_name)
+    dynamic_attributes[attr_name.to_s]
   end
 
-  def write_dynamic_attribute(name, value)
-    self[:dynamic_attributes] = dynamic_attributes.merge(name => value)
+  def write_dynamic_attribute(attr_name, value)
+    self['dynamic_attributes'] = dynamic_attributes.merge(attr_name.to_s => value)
     value
   end
 
