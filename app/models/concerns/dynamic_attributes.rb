@@ -33,7 +33,7 @@ module DynamicAttributes
   def attributes
     attrs = super
     dynamic_attrs = attrs.delete('dynamic_attributes') || {}
-    attrs.merge(dynamic_attrs)
+    dynamic_attrs.merge(attrs)
   end
 
   def dynamic_attributes
