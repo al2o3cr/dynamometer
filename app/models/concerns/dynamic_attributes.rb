@@ -4,9 +4,9 @@ module DynamicAttributes
 
   def [](name)
     attribute_name = name.to_s
-    if attribute_names.include?(attribute_name)
+    if has_attribute?(attribute_name)
       super
-    elsif dynamic_attributes.keys.include?(attribute_name)
+    elsif has_dynamic_attribute?(attribute_name)
       dynamic_attributes[attribute_name]
     else
       super
@@ -27,7 +27,7 @@ module DynamicAttributes
       self[:dynamic_attributes] = dynamic_attributes.merge(method_name.chop => args[0])
       args[0]
     elsif has_dynamic_attribute?(method_name)
-      self[method_name]
+      send :[], method_name
     else
       super
     end
