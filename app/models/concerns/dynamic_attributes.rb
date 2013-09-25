@@ -4,10 +4,12 @@ module DynamicAttributes
 
   def [](name)
     attribute_name = name.to_s
-    if attribute_name == 'dynamic_attributes' || !has_dynamic_attribute?(attribute_name)
+    if attribute_names.include?(attribute_name)
       super
-    else
+    elsif dynamic_attributes.keys.include?(attribute_name)
       dynamic_attributes[attribute_name]
+    else
+      super
     end
   end
 
