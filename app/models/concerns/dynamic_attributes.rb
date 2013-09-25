@@ -3,7 +3,7 @@ module DynamicAttributes
   extend ActiveSupport::Concern
 
   def [](attr_name)
-    if has_attribute?(attr_name.to_s)
+    if @attributes.keys.include?(attr_name.to_s)
       super
     elsif has_dynamic_attribute?(attr_name)
       read_dynamic_attribute(attr_name)
@@ -38,6 +38,10 @@ module DynamicAttributes
 
   def dynamic_attributes
     self['dynamic_attributes'] || {}
+  end
+
+  def has_attribute?(attr_name)
+    super || has_dynamic_attribute?(attr_name)
   end
 
   private
