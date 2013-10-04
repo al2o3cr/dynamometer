@@ -55,7 +55,7 @@ module DynamicAttributes
   end
 
   def write_dynamic_attribute(attr_name, value)
-    self['dynamic_attributes'] = dynamic_attributes.merge(attr_name.to_s => value)
+    @attributes.merge('dynamic_attributes' => dynamic_attributes.merge(attr_name.to_s => value))
     value
   end
 
