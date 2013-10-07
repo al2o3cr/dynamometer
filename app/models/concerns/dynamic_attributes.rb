@@ -37,7 +37,7 @@ module DynamicAttributes
   end
 
   def dynamic_attributes
-    self['dynamic_attributes'] || {}
+    self['dynamic_attributes'].blank? ? {} : self['dynamic_attributes']
   end
 
   def has_attribute?(attr_name)
@@ -55,7 +55,7 @@ module DynamicAttributes
   end
 
   def write_dynamic_attribute(attr_name, value)
-    @attributes.merge('dynamic_attributes' => dynamic_attributes.merge(attr_name.to_s => value))
+    self['dynamic_attributes'] = dynamic_attributes.merge(attr_name.to_s => value)
     value
   end
 
