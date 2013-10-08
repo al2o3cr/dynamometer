@@ -1,10 +1,11 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.push File.expand_path("../lib", __FILE__)
+
+require "dynamometer/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "dynamometer"
-  spec.version       = "0.0.5"
+  spec.version       = Dynamometer::VERSION
   spec.authors       = ["John Colvin"]
   spec.email         = ["john.colvin@neo.com"]
   spec.description   = "Adds support for searchable, sortable, dynamic ActiveRecord attributes"
@@ -17,6 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
+  spec.add_dependency "rails", "~> 4.0.0"
+  spec.add_dependency "pg"
 end
