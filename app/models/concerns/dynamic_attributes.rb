@@ -23,8 +23,8 @@ module DynamicAttributes
   def method_missing(method, *args)
     if has_dynamic_attribute?(method)
       read_dynamic_attribute(method)
-    elsif method =~ /^[\w]+\=$/
-      write_dynamic_attribute(method.to_s.chop, args[0])
+    elsif method =~ /^([\w]+)\=$/ && !@attributes.keys.include?($1)
+      write_dynamic_attribute($1, args[0])
     else
       super
     end
