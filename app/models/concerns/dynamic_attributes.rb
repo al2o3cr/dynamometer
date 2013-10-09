@@ -3,7 +3,7 @@ module DynamicAttributes
   extend ActiveSupport::Concern
 
   def [](attr_name)
-    if @attributes.keys.include?(attr_name.to_s)
+    if @attributes.has_key?(attr_name.to_s)
       super
     elsif has_dynamic_attribute?(attr_name)
       read_dynamic_attribute(attr_name)
@@ -20,10 +20,14 @@ module DynamicAttributes
     end
   end
 
-  def method_missing(method, *args)
-    if has_dynamic_attribute?(method)
+  def method_missing(method, *args, &block)
+    if self.class.define_attribute_methods && respond_to_without_attributes?(method)
+      # this reproduces some behavior from AR's method_missing, as a safeguard
+      # against dynamic attributes shadowing real ones
+      send(method, *args, &block)
+    elsif has_dynamic_attribute?(method)
       read_dynamic_attribute(method)
-    elsif method =~ /^([\w]+)\=$/ && !@attributes.keys.include?($1)
+    elsif method =~ /^([\w]+)\=$/
       write_dynamic_attribute($1, args[0])
     else
       super

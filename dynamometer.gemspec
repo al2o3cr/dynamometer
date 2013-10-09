@@ -20,4 +20,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", "~> 4.0.0"
   spec.add_dependency "pg"
+  spec.add_development_dependency "active_model_serializers"
 end
