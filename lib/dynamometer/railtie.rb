@@ -1,6 +1,6 @@
 module Dynamometer
   class Railtie < Rails::Engine
-    railtie_name :mygem
+    railtie_name :dynamometer
 
     initializer "dynamometer.active_record" do
       ActiveSupport.on_load :active_record do
