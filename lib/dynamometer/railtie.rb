@@ -1,3 +1,5 @@
+require 'dynamometer/dynamic_attributes_in_where'
+
 module Dynamometer
   class Railtie < Rails::Engine
     railtie_name :dynamometer
@@ -8,15 +10,11 @@ module Dynamometer
           delegate :where_dynamic_attributes, to: :all
         end
 
-        ActiveRecord::QueryMethods.module_eval do
-          def where_dynamic_attributes(filters)
-            spawn.tap do |new_rel|
-              (filters || {}).each do |k, v|
-                new_rel.where_values += build_where("dynamic_attributes @> hstore(?, ?)", [k, v])
-              end
-            end
-          end
+        ActiveRecord::Base.class_eval do
+          def self.partition_wheres(args); [args,{}]; end
         end
+
+        ActiveRecord::Relation.send(:include, DynamicAttributesInWhere)
       end
     end
   end
