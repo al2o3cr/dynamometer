@@ -78,14 +78,34 @@ class PersonTest < ActiveSupport::TestCase
 
   test "can find records by a dynamic attribute" do
     @person = Person.create(name: 'Nobody', magic_level: 'over 9000')
-    results = Person.where_dynamic_attributes(magic_level: 'over 9000')
+    results = Person.where(magic_level: 'over 9000')
+    assert results.present?
+    assert_equal @person, results.first
+  end
+
+  test "can find records by a dynamic attribute and a static one" do
+    @person = Person.create(name: 'Nobody', magic_level: 'over 9000')
+    results = Person.where(name: 'Nobody', magic_level: 'over 9000')
+    assert results.present?
+    assert_equal @person, results.first
+  end
+
+  test "can find records by a nonexistent dynamic attribute" do
+    results = Person.where(attribute_not_appearing_in_this_gem: 'wat')
+    assert results.empty?
+  end
+
+  test "can find records via associations" do
+    father = Person.create(name: 'Somebody')
+    @person = Person.create(name: 'Nobody', magic_level: 'over 9000', father: father)
+    results = Person.where(magic_level: 'over 9000', father: father)
     assert results.present?
     assert_equal @person, results.first
   end
 
   test "chaining does not damage original Relation" do
     original_relation = Person.where(id: 1)
-    new_relation = original_relation.where_dynamic_attributes(magic_level: 'over 9000')
+    new_relation = original_relation.where(magic_level: 'over 9000')
     duplicate_relation = Person.where(id: 1)
     assert_equal duplicate_relation.where_values, original_relation.where_values
   end

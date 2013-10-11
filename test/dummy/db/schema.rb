@@ -11,12 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131008210406) do
+ActiveRecord::Schema.define(version: 20131011183117) do
 
   create_table "people", force: true do |t|
     t.string  "name",               null: false
     t.integer "age"
     t.hstore  "dynamic_attributes"
+    t.integer "father_id"
   end
 
   add_index "people", ["dynamic_attributes"], name: "index_people_on_dynamic_attributes", using: :btree

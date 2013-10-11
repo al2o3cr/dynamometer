@@ -2,6 +2,14 @@ module DynamicAttributes
 
   extend ActiveSupport::Concern
 
+  module ClassMethods
+    # we only define this for classes with dynamic attributes
+    # so that unmodified classes work exactly as before
+    def partition_wheres(wheres)
+      wheres.partition { |k, v| column_names.include?(k.to_s) || reflect_on_association(k.to_sym) }.map { |x| Hash[x] }
+    end
+  end
+
   def [](attr_name)
     if @attributes.has_key?(attr_name.to_s)
       super
