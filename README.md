@@ -61,22 +61,6 @@ You can query for matches to dynamic_attributes by calling `where_dynamic_attrib
     current_site.users.where_dynamic_attributes(category: 'superuser')
     current_site.users.where_dynamic_attributes(category: 'superuser', name: 'Steve')
 
-I can't figure out how to do this correctly in the gem. So, for now to use `where_dynamic_attributes`, put this in your `config/initializers`:
-
-    module ActiveRecord
-      module QueryMethods
-        extend ActiveSupport::Concern
-    
-        def where_dynamic_attributes(filters)
-          (filters || {}).each do |k, v|
-            self.where_values += build_where("dynamic_attributes @> hstore(?, ?)", [k, v])
-          end
-          self
-        end
-    
-      end
-    end
-
 ## ActiveModel Serializers
 
 If you want to serialize all of your dynamic attributes using activemodel serializers

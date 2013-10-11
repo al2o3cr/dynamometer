@@ -1,6 +1,4 @@
+require 'dynamometer/railtie' if defined?(Rails)
+
 module Dynamometer
-  module Rails
-    class Engine < ::Rails::Engine
-    end
-  end
 end
