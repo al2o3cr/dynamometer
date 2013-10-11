@@ -8,6 +8,20 @@ module DynamicAttributes
     def partition_wheres(wheres)
       wheres.partition { |k, v| column_names.include?(k.to_s) || reflect_on_association(k.to_sym) }.map { |x| Hash[x] }
     end
+
+    def dynamic_attributes(*args)
+      args.each do |attr|
+        class_eval <<-ENDOFCODE
+          def #{attr}
+            read_dynamic_attribute(#{attr.inspect})
+          end
+
+          def #{attr}=(v)
+            write_dynamic_attribute(#{attr.inspect}, v)
+          end
+        ENDOFCODE
+      end
+    end
   end
 
   def [](attr_name)

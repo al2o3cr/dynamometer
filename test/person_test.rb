@@ -103,6 +103,12 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal @person, results.first
   end
 
+  test "can put validations on dynamic attributes" do
+    @person = Person.new(name: 'Nobody', hometown: 'X')
+    assert !@person.valid?
+    assert @person.errors.has_key?(:hometown)
+  end
+
   test "chaining does not damage original Relation" do
     original_relation = Person.where(id: 1)
     new_relation = original_relation.where(magic_level: 'over 9000')
