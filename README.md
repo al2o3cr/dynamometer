@@ -54,6 +54,20 @@ Dynamic attributes will appear in your model's attributes `user.attributes` as i
 
 You can access just the dynamic attributes by calling `dynamic_attributes`.
 
+## Validating
+
+You can validate dynamic attributes if you declare them in your model:
+
+    class Person < ActiveRecord::Base
+      include DynamicAttributes
+
+      dynamic_attributes :hometown
+      validates_length_of :hometown, minimum: 2, allow_nil: true
+    end
+
+Attempting to validate undeclared dynamic attributes will fail with NoMethodError if
+the attribute hasn't been set at all; don't do that.
+
 ## Querying
 
 You can query for matches to dynamic attributes just like regular attributes.
