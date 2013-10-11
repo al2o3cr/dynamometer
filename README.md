@@ -56,10 +56,16 @@ You can access just the dynamic attributes by calling `dynamic_attributes`.
 
 ## Querying
 
-You can query for matches to dynamic_attributes by calling `where_dynamic_attributes`. 
+You can query for matches to dynamic attributes just like regular attributes.
+
+    current_site.users.where(category: 'superuser')
+    current_site.users.where(category: 'superuser', name: 'Steve')
+
+You can also query for matches to dynamic attributes by calling
+`where_dynamic_attributes`. Unlike `where` above, this will not work if you
+mix dynamic and regular attributes.
 
     current_site.users.where_dynamic_attributes(category: 'superuser')
-    current_site.users.where_dynamic_attributes(category: 'superuser', name: 'Steve')
 
 ## ActiveModel Serializers
 
