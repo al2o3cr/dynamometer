@@ -10,6 +10,9 @@ module DynamicAttributes
     end
 
     def dynamic_attributes(*args)
+      @_dynamic_attributes ||= []
+      @_dynamic_attributes |= args.map(&:to_s)
+
       args.each do |attr|
         class_eval <<-ENDOFCODE
           def #{attr}
@@ -21,6 +24,12 @@ module DynamicAttributes
           end
         ENDOFCODE
       end
+    end
+
+    def permitted_dynamic_attribute?(attr)
+      # make sure the regular attributes have been defined
+      define_attribute_methods
+      @_dynamic_attributes.include?(attr.to_s) || instance_methods.none? { |m| m.to_s == attr.to_s }
     end
   end
 

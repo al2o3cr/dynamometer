@@ -90,6 +90,29 @@ If you want to serialize all of your dynamic attributes using activemodel serial
       attributes :id
     end
 
+## Strong Parameters
+
+To specify that dynamic attributes should be allowed using strong parameters,
+include the `PermitDynamic` concern in your controller and specify the model
+to be checked against.
+
+    class PeopleController < ApplicationController
+      include PermitDynamic
+
+      def create
+        @person = Person.create(person_params)
+        render json: @person
+      end
+
+      private
+
+      def person_params
+        params.require(:person).permit(:name, dynamic_attributes: Person)
+      end
+    end
+
+This will permit any parameters that are NOT valid regular attributes of `Person`.
+
 ## Installation
 
 Add this line to your application's Gemfile:
