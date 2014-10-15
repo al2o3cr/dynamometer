@@ -122,3 +122,44 @@ Add this line to your application's Gemfile:
 And then execute:
 
     $ bundle
+
+## Using Outside Rails
+
+Dynamometer can be used outside of Rails with a few minor differences.
+
+### Explicitly Qualify Included Modules
+
+Outside Rails, the included modules in `app/models/concerns` and `app/controllers/concerns` are not
+available. Instead, use their fully-qualified names:
+
+    class Person < ActiveRecord::Base
+      include Dynamometer::DynamicAttributes
+      
+      dynamic_attributes :hometown
+      validates_length_of :hometown, minimum: 2, allow_nil: true
+    end
+
+and:
+
+    class PeopleController < ApplicationController
+      include Dynamometer::PermitDynamic
+      
+      def create
+        @person = Person.create(person_params)
+        render json: @person
+      end
+      
+      private
+      
+      def person_params
+        params.require(:person).permit(:name, dynamic_attributes: Person)
+      end
+    end
+
+For the controller case, you'll also need to `require 'dynamometer/permit_dynamic'` someplace in your environment.
+
+### Activate the ActiveRecord integration
+
+Somewhere in your initialization code after `ActiveRecord::Base` has been loaded, call `Dynamometer.attach` to
+enable dynamic attributes.
+

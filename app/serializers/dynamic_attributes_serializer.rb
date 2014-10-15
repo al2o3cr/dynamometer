@@ -1,5 +1,3 @@
-module DynamicAttributesSerializer
-  def attributes
-    super.merge(object.dynamic_attributes)
-  end
-end
+require 'dynamometer/dynamic_attributes_serializer'
+
+DynamicAttributesSerializer = Dynamometer::DynamicAttributesSerializer
