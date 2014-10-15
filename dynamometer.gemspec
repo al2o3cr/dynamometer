@@ -18,7 +18,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rails", "~> 4.0.0"
+  spec.add_dependency "activerecord", "< 4.3.0"
   spec.add_dependency "pg"
-  spec.add_development_dependency "active_model_serializers"
+  # tricky: AMS 0.9.0 and ActionController 4.2 do not play nice togther
+  # see https://github.com/rails-api/active_model_serializers/issues/643
+  # for details
+  spec.add_development_dependency "active_model_serializers", "< 0.9.0"
+  spec.add_development_dependency "rails", "< 4.3.0"
 end
